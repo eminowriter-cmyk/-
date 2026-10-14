@@ -1,0 +1,6 @@
+{
+  "name": "貓咪互動樂園 - 蠟筆剪貼手作大螢幕互動展覽系統",
+  "description": "現場畫貓、攝影機掃描去背、單機投影大螢幕之手作蠟筆與拼貼風互動樂園。具備流暢 2D 紙偶動態、空投降落、毛線球互動、貓爬架攀爬及防記憶體膨脹機制。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

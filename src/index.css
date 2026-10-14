@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Paper grain & cardstock feel */
+  .paper-shadow {
+    filter: drop-shadow(0 4px 6px rgba(60, 40, 20, 0.18)) drop-shadow(0 1px 2px rgba(60, 40, 20, 0.12));
+  }
+  
+  .cardstock-shadow {
+    box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.08), 4px 6px 12px rgba(80, 50, 20, 0.15);
+  }
+
+  .corrugated-cardboard {
+    background: repeating-linear-gradient(
+      90deg,
+      #d7b98e 0px,
+      #d7b98e 6px,
+      #c4a377 6px,
+      #c4a377 12px
+    );
+  }
+
+  .washi-tape-pink {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 182, 193, 0.75),
+      rgba(255, 182, 193, 0.75) 10px,
+      rgba(255, 240, 245, 0.75) 10px,
+      rgba(255, 240, 245, 0.75) 20px
+    );
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    backdrop-filter: blur(1px);
+  }
+
+  .washi-tape-mint {
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(168, 230, 207, 0.75),
+      rgba(168, 230, 207, 0.75) 8px,
+      rgba(220, 247, 237, 0.75) 8px,
+      rgba(220, 247, 237, 0.75) 16px
+    );
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .washi-tape-yellow {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 225, 130, 0.8),
+      rgba(255, 225, 130, 0.8) 12px,
+      rgba(255, 243, 176, 0.8) 12px,
+      rgba(255, 243, 176, 0.8) 24px
+    );
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  /* Paper cutout border for cat sprites */
+  .cat-cutout {
+    filter: drop-shadow(0 0 0 3px #ffffff) drop-shadow(0 0 0 4.5px rgba(220, 205, 180, 0.8)) drop-shadow(0 6px 8px rgba(60, 40, 20, 0.22));
+  }
+
+  .cat-cutout-hover {
+    filter: drop-shadow(0 0 0 4px #ffd166) drop-shadow(0 8px 14px rgba(60, 40, 20, 0.3));
+  }
+
+  /* Crayon dashed border */
+  .crayon-border {
+    border-style: dashed;
+    border-width: 3px;
+    border-color: #8b5a2b;
+    border-radius: 12px;
+  }
+}
+
+/* Torn paper top and bottom edges using pure CSS mask or clip-path */
+.torn-edge-bottom {
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 95%,
+    98% 97%,
+    96% 94%,
+    94% 96%,
+    92% 93%,
+    90% 97%,
+    88% 94%,
+    86% 96%,
+    84% 93%,
+    82% 96%,
+    80% 94%,
+    78% 97%,
+    76% 95%,
+    74% 97%,
+    72% 93%,
+    70% 96%,
+    68% 94%,
+    66% 97%,
+    64% 94%,
+    62% 96%,
+    60% 93%,
+    58% 97%,
+    56% 95%,
+    54% 97%,
+    52% 93%,
+    50% 96%,
+    48% 94%,
+    46% 97%,
+    44% 94%,
+    42% 96%,
+    40% 93%,
+    38% 97%,
+    36% 95%,
+    34% 97%,
+    32% 93%,
+    30% 96%,
+    28% 94%,
+    26% 97%,
+    24% 94%,
+    22% 96%,
+    20% 93%,
+    18% 97%,
+    16% 95%,
+    14% 97%,
+    12% 93%,
+    10% 96%,
+    8% 94%,
+    6% 97%,
+    4% 94%,
+    2% 96%,
+    0% 94%
+  );
+}
+
+.torn-edge-top {
+  clip-path: polygon(
+    0% 5%,
+    2% 3%,
+    4% 6%,
+    6% 3%,
+    8% 6%,
+    10% 4%,
+    12% 7%,
+    14% 3%,
+    16% 5%,
+    18% 3%,
+    20% 7%,
+    22% 4%,
+    24% 6%,
+    26% 3%,
+    28% 6%,
+    30% 4%,
+    32% 7%,
+    34% 3%,
+    36% 5%,
+    38% 3%,
+    40% 7%,
+    42% 4%,
+    44% 6%,
+    46% 3%,
+    48% 6%,
+    50% 4%,
+    52% 7%,
+    54% 3%,
+    56% 5%,
+    58% 3%,
+    60% 7%,
+    62% 4%,
+    64% 6%,
+    66% 3%,
+    68% 6%,
+    70% 4%,
+    72% 7%,
+    74% 3%,
+    76% 5%,
+    78% 3%,
+    80% 6%,
+    82% 4%,
+    84% 7%,
+    86% 4%,
+    88% 6%,
+    90% 3%,
+    92% 7%,
+    94% 4%,
+    96% 6%,
+    98% 3%,
+    100% 5%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+/* Crisis Warning Red Crayon Frame */
+@keyframes crisisPulse {
+  0%, 100% {
+    box-shadow: inset 0 0 30px rgba(220, 38, 38, 0.45), 0 0 20px rgba(239, 68, 68, 0.35);
+    border-color: rgba(220, 38, 38, 0.85);
+  }
+  50% {
+    box-shadow: inset 0 0 60px rgba(220, 38, 38, 0.75), 0 0 35px rgba(239, 68, 68, 0.6);
+    border-color: rgba(185, 28, 28, 1);
+  }
+}
+
+.crisis-frame {
+  animation: crisisPulse 1.8s infinite ease-in-out;
+  border-width: 8px;
+  border-style: dashed;
+}
+
+/* Red Crayon Hazard Tape */
+.washi-tape-hazard {
+  background: repeating-linear-gradient(
+    -45deg,
+    #dc2626,
+    #dc2626 12px,
+    #fef08a 12px,
+    #fef08a 24px
+  );
+  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+/* Handwritten / craft font fallback */
+body, button, input {
+  font-family: 'Zen Maru Gothic', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+}
