@@ -184,41 +184,45 @@ export class CatParadiseEngine {
     this.ctx.resetTransform?.();
     this.ctx.scale(this.dpr, this.dpr);
 
-    this.groundY = this.height - 110;
+    this.groundY = this.height - 96;
 
-    // 分區重建：左半邊街頭 (Stray Cat Street) 與 右半邊收容所 (Animal Shelter)
+    // 確保跳台位置安全避開左上角 QR 便條區 (y >= 290)，不與便條互相遮擋
+    const safeHighY = Math.max(300, this.groundY - 185);
+    const safeMidY = Math.max(340, this.groundY - 95);
+
+    // 分區重建：左半邊流浪貓街區 (Stray Cat Street) 與 右半邊貓狗躍動園區 (Animal Shelter)
     this.platforms = [
-      // 左側街頭：破舊紙箱跳台與磚牆高台
+      // 左側街區：木箱紙箱跳台與紅磚牆高台
       {
         id: 'p_street1',
-        name: '街頭破舊瓦楞紙箱',
-        x: Math.max(30, this.width * 0.12),
-        y: this.groundY - 75,
-        width: 150,
+        name: '街區紙箱跳台',
+        x: Math.max(70, this.width * 0.11),
+        y: safeMidY,
+        width: 145,
         height: 24
       },
       {
         id: 'p_street2',
-        name: '街頭紅磚牆台',
-        x: Math.max(160, this.width * 0.28),
-        y: this.groundY - 175,
+        name: '街區磚牆高台',
+        x: Math.max(225, this.width * 0.29),
+        y: safeHighY,
         width: 140,
         height: 24
       },
-      // 右側收容所：愛心貓爬架與閣樓跳台
+      // 右側貓狗躍動園區：園區原木貓跳台與陽台眺望台
       {
         id: 'p_shelter1',
-        name: '愛心收容所低台',
+        name: '躍動園區低台',
         x: this.width * 0.62,
-        y: this.groundY - 95,
-        width: 160,
+        y: safeMidY,
+        width: 155,
         height: 24
       },
       {
         id: 'p_shelter2',
-        name: '愛心收容所望遠閣樓',
-        x: this.width * 0.80,
-        y: this.groundY - 215,
+        name: '躍動園區眺望台',
+        x: Math.min(this.width - 175, this.width * 0.79),
+        y: safeHighY,
         width: 150,
         height: 24
       }
@@ -242,8 +246,10 @@ export class CatParadiseEngine {
     const img = new Image();
     img.src = imageSrc;
 
-    // Spawn point: random horizontal position in sky
-    const spawnX = Math.random() * (this.width - 260) + 130;
+    // Spawn point: keep clear of the top-left QR sticky note (x >= 220) and top-right hint note
+    const minSpawnX = Math.min(220, this.width * 0.25);
+    const maxSpawnX = Math.max(minSpawnX + 120, this.width - 235);
+    const spawnX = minSpawnX + Math.random() * (maxSpawnX - minSpawnX);
     const spawnY = -120;
 
     const cat: Cat = {
@@ -1036,11 +1042,11 @@ export class CatParadiseEngine {
       // Zone label stamp on platform
       ctx.font = 'bold 11px sans-serif';
       if (p.id.includes('street')) {
-        ctx.fillStyle = '#7a4e2d';
-        ctx.fillText('📦 街頭紙箱', p.x + 38, p.y + 16);
+        ctx.fillStyle = '#6d4726';
+        ctx.fillText('📦 街區木箱', p.x + 36, p.y + 16);
       } else if (p.id.includes('shelter')) {
-        ctx.fillStyle = '#d9480f';
-        ctx.fillText('🏠 愛心平台', p.x + 38, p.y + 16);
+        ctx.fillStyle = '#c94a17';
+        ctx.fillText('🐾 躍動跳台', p.x + 36, p.y + 16);
       }
 
       // === Seasonal Platform Decorations ===

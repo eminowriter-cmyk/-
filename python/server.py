@@ -19,9 +19,15 @@ CATS_DIR = "cats"
 if not os.path.exists(CATS_DIR):
     os.makedirs(CATS_DIR)
 
+# 確保一啟動就存在 manifest.json，避免前端輪詢時出現 404
+manifest_path = os.path.join(CATS_DIR, "manifest.json")
+if not os.path.exists(manifest_path):
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump([], f)
+
 def auto_update_manifest():
     """持續監視 cats/ 目錄並自動產出 manifest.json"""
-    last_files = []
+    last_files = None
     while True:
         try:
             files = [

@@ -26,6 +26,12 @@ CATS_DIR = "cats"
 if not os.path.exists(CATS_DIR):
     os.makedirs(CATS_DIR)
 
+# 確保一啟動就存在 manifest.json
+initial_manifest = os.path.join(CATS_DIR, "manifest.json")
+if not os.path.exists(initial_manifest):
+    with open(initial_manifest, "w", encoding="utf-8") as f:
+        json.dump([], f)
+
 def update_manifest():
     """更新 cats/manifest.json 清單供前端大螢幕讀取"""
     try:

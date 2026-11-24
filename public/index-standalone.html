@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>貓咪互動樂園 - 蠟筆剪貼手作展覽系統</title>
+  <title>貓咪互動樂園 · 貓狗躍動園區</title>
   <style>
     /* 溫馨手作蠟筆與剪貼拼貼風 CSS */
     * {
@@ -23,249 +23,184 @@
       transition: background 0.7s;
     }
 
-    /* 左右分區容器 */
+    /* 左右分區手繪剪紙背景容器 (z-index: 0，永遠在貓咪背後) */
     #world {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
       display: flex;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* 左半邊：流浪貓街頭 (Stray Cat Street) */
     .street-zone {
       position: relative;
       width: 50%;
       height: 100%;
-      background: linear-gradient(180deg, #d8d3c5 0%, #ecdcb5 100%);
-      border-right: 3px dashed rgba(184, 148, 100, 0.6);
+      background: linear-gradient(180deg, #e3ddd1 0%, #efe5cf 100%);
+      border-right: 3px dashed rgba(184, 148, 100, 0.7);
       overflow: hidden;
-      transition: background 0.7s;
     }
 
-    /* 蠟筆紅磚牆 */
-    .brick-wall {
-      position: absolute;
-      bottom: 80px;
-      left: 0;
-      width: 100%;
-      height: 160px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 8px;
-      opacity: 0.8;
-      pointer-events: none;
-    }
-    .brick-row {
-      display: flex;
-      gap: 6px;
-      height: 24px;
-    }
-    .brick {
-      flex: 1;
-      background: #ba5d46;
-      border-radius: 2px;
-      border-bottom: 2px solid #8c3f2d;
-      border-right: 2px solid #8c3f2d;
-      box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-    .brick:nth-child(2n) { background: #c96a53; }
-    .brick:nth-child(3n) { background: #a64b35; }
-
-    /* 電線桿與電線 */
-    .utility-pole {
-      position: absolute;
-      top: 0;
-      left: 80px;
-      width: 14px;
-      height: 300px;
-      background: #7c5332;
-      border-right: 2px solid #5c3a21;
-      box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
-      pointer-events: none;
-    }
-    .pole-cross {
-      position: absolute;
-      top: 50px;
-      left: -24px;
-      width: 62px;
-      height: 12px;
-      background: #96663f;
-      border: 1px solid #5c3a21;
-    }
-
-    /* 紙箱堆 */
-    .cardboard-boxes {
-      position: absolute;
-      bottom: 95px;
-      left: 30px;
-      display: flex;
-      align-items: flex-end;
-      gap: 12px;
-      pointer-events: none;
-    }
-    .box-1 {
-      width: 90px;
-      height: 65px;
-      background: repeating-linear-gradient(90deg, #d7b98e 0px, #d7b98e 6px, #c4a377 6px, #c4a377 12px);
-      border: 2px solid #a37951;
-      border-radius: 2px;
-      padding: 4px;
-      box-shadow: 3px 4px 8px rgba(0,0,0,0.12);
-      transform: rotate(-3deg);
-    }
-    .box-2 {
-      width: 75px;
-      height: 52px;
-      background: #d4b383;
-      border: 2px solid #a37951;
-      border-radius: 2px;
-      padding: 4px;
-      box-shadow: 3px 4px 8px rgba(0,0,0,0.12);
-      transform: rotate(4deg);
-    }
-
-    /* 街頭石礫地面 */
-    .street-ground-back {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 110px;
-      background: #8a7a6b;
-      clip-path: polygon(0 25%, 5% 15%, 10% 25%, 15% 18%, 20% 26%, 25% 16%, 30% 25%, 35% 17%, 40% 24%, 45% 16%, 50% 26%, 55% 18%, 60% 24%, 65% 17%, 70% 25%, 75% 16%, 80% 25%, 85% 17%, 90% 26%, 95% 18%, 100% 25%, 100% 100%, 0 100%);
-      pointer-events: none;
-    }
-    .street-ground-front {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      background: #6b5d4f;
-      clip-path: polygon(0 20%, 3% 26%, 8% 16%, 14% 25%, 20% 17%, 26% 28%, 32% 16%, 38% 27%, 44% 18%, 50% 26%, 56% 16%, 62% 28%, 68% 18%, 74% 27%, 80% 16%, 86% 26%, 92% 17%, 97% 25%, 100% 18%, 100% 100%, 0 100%);
-      pointer-events: none;
-    }
-
-    /* 右半邊：流浪動物收容所 (Animal Shelter) */
     .shelter-zone {
       position: relative;
       width: 50%;
       height: 100%;
-      background: radial-gradient(circle at 70% 30%, #fff7f0 0%, #faeed1 60%, #ecdcb5 100%);
+      background: linear-gradient(180deg, #fff9ef 0%, #f7ead2 100%);
       overflow: hidden;
-      transition: background 0.7s;
     }
 
-    /* 瓦楞紙柵欄 */
-    .fence-container {
+    .paper-dots-overlay {
       position: absolute;
-      bottom: 90px;
-      right: 20px;
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      pointer-events: none;
-      opacity: 0.85;
+      inset: 0;
+      opacity: 0.6;
+      background-image: radial-gradient(rgba(120, 88, 52, 0.08) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
-    .fence-post {
-      width: 28px;
-      height: 100px;
-      background: #d7b98e;
-      border: 2px solid #a37951;
-      border-radius: 6px 6px 0 0;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    }
-    .fence-post:nth-child(even) { height: 85px; }
 
-    /* 貓砂盆與貓碗 */
-    .shelter-props {
+    .scene-svg {
       position: absolute;
-      bottom: 95px;
-      right: 180px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      pointer-events: none;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
-    .litter-box {
-      width: 90px;
-      height: 38px;
-      background: #e7f5ff;
-      border: 2px solid #74c0fc;
-      border-radius: 6px;
-      box-shadow: 2px 3px 6px rgba(0,0,0,0.1);
+
+    /* 左上角手作紙膠帶 QR Code 便條（位於高空角落，完全不遮擋貓咪活動區） */
+    .qr-sticky-note {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 30;
+      display: block;
+      width: 156px;
+      background: #fffbe6;
+      border: 2px solid #d4b078;
+      border-radius: 4px;
+      padding: 12px 12px 10px;
+      text-decoration: none;
+      color: #5c3a21;
+      box-shadow: 3px 5px 14px rgba(80, 50, 20, 0.2);
+      transform: rotate(-1deg);
+      transition: transform 0.2s ease;
+    }
+    .qr-sticky-note:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+    .qr-washi-tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(2deg);
+      width: 80px;
+      height: 18px;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(168, 230, 207, 0.85),
+        rgba(168, 230, 207, 0.85) 8px,
+        rgba(220, 247, 237, 0.85) 8px,
+        rgba(220, 247, 237, 0.85) 16px
+      );
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
+      border-radius: 2px;
+    }
+    .qr-header-title {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #5c3a21;
+      letter-spacing: 0.5px;
+      line-height: 1.25;
+    }
+    .qr-header-sub {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #9c6631;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
+    .qr-box {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      padding: 4px;
+      background: #fffdf7;
+      border: 2px dashed #c8a165;
+      border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
-      font-weight: bold;
-      color: #1c7ed6;
     }
-
-    /* 收容所綠意草地 */
-    .shelter-lawn-back {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 110px;
-      background: #82c91e;
-      clip-path: polygon(0 25%, 5% 15%, 10% 25%, 15% 18%, 20% 26%, 25% 16%, 30% 25%, 35% 17%, 40% 24%, 45% 16%, 50% 26%, 55% 18%, 60% 24%, 65% 17%, 70% 25%, 75% 16%, 80% 25%, 85% 17%, 90% 26%, 95% 18%, 100% 25%, 100% 100%, 0 100%);
-      pointer-events: none;
-      transition: background-color 0.7s;
+    .qr-url {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #7a4e2d;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .shelter-lawn-front {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      background: #94d82d;
-      clip-path: polygon(0 20%, 3% 26%, 8% 16%, 14% 25%, 20% 17%, 26% 28%, 32% 16%, 38% 27%, 44% 18%, 50% 26%, 56% 16%, 62% 28%, 68% 18%, 74% 27%, 80% 16%, 86% 26%, 92% 17%, 97% 25%, 100% 18%, 100% 100%, 0 100%);
-      pointer-events: none;
-      transition: background-color 0.7s;
+    .qr-sticky-note:hover .qr-url {
+      color: #d9480f;
     }
 
     /* 頂部標題 */
     .top-header {
       position: absolute;
-      top: 14px;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      z-index: 30;
+      z-index: 25;
       pointer-events: none;
     }
     .title-banner {
       background: #fffdf5;
       border: 3px dashed #8b5a2b;
       padding: 6px 24px;
-      border-radius: 30px;
-      box-shadow: 0 6px 16px rgba(70,45,20,0.18);
+      border-radius: 18px;
+      box-shadow: 0 6px 16px rgba(70, 45, 20, 0.16);
       display: flex;
       align-items: center;
       gap: 10px;
       position: relative;
     }
+    .title-banner::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(1deg);
+      width: 108px;
+      height: 18px;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(168, 230, 207, 0.85),
+        rgba(168, 230, 207, 0.85) 8px,
+        rgba(220, 247, 237, 0.85) 8px,
+        rgba(220, 247, 237, 0.85) 16px
+      );
+      border-radius: 2px;
+    }
     .title-banner h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       color: #5c3a21;
       letter-spacing: 1px;
+      white-space: nowrap;
     }
 
     /* 紙膠帶風格進度條 (目前貓咪數量 / 25) */
     .progress-tape {
-      background: #fffcee;
+      background: rgba(255, 252, 238, 0.95);
       border: 2px solid #e0c89e;
-      border-radius: 20px;
+      border-radius: 14px;
       padding: 4px 14px;
       display: flex;
       align-items: center;
@@ -273,11 +208,11 @@
       font-size: 13px;
       font-weight: bold;
       color: #8c5025;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       transition: all 0.3s;
     }
     .progress-bar-bg {
-      width: 140px;
+      width: 136px;
       height: 10px;
       background: #e9ecef;
       border-radius: 10px;
@@ -308,100 +243,43 @@
       animation: crisisPulse 1.8s infinite ease-in-out !important;
     }
 
-    /* 中央手作警告牌 */
+    /* 上方天空區手作警告牌（不遮擋下方貓咪點擊認養） */
     #crisisAlertBoard {
       position: absolute;
-      top: 50%;
+      top: 128px;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       background: rgba(255, 245, 245, 0.96);
       border: 4px dashed #e03131;
       border-radius: 18px;
-      padding: 24px 32px;
-      max-width: 540px;
+      padding: 16px 24px;
+      max-width: 520px;
+      width: calc(100% - 32px);
       text-align: center;
-      box-shadow: 0 12px 30px rgba(180, 20, 20, 0.35);
-      z-index: 35;
+      box-shadow: 0 12px 30px rgba(180, 20, 20, 0.3);
+      z-index: 25;
       display: none;
       pointer-events: none;
     }
     #crisisAlertBoard h2 {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 900;
       color: #c92a2a;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     #crisisAlertBoard p {
-      font-size: 14px;
-      font-weight: bold;
-      color: #862e2e;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    /* 科普衛教便利貼 (10秒自動輪播) */
-    .edu-sticky-note {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      background: #fff9db;
-      border: 2px solid #d9ba82;
-      border-radius: 6px;
-      padding: 14px 18px;
-      max-width: 320px;
-      box-shadow: 3px 5px 15px rgba(80, 50, 20, 0.18);
-      z-index: 30;
-      transform: rotate(1deg);
-      transition: transform 0.2s, background 0.4s;
-    }
-    .edu-sticky-note:hover {
-      transform: rotate(0deg) scale(1.02);
-    }
-    .sticky-tape {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-2deg);
-      width: 90px;
-      height: 20px;
-      background: repeating-linear-gradient(-45deg, rgba(168, 230, 207, 0.8), rgba(168, 230, 207, 0.8) 8px, rgba(220, 247, 237, 0.8) 8px, rgba(220, 247, 237, 0.8) 16px);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-    }
-    .edu-content {
       font-size: 13px;
       font-weight: bold;
-      color: #4a2e18;
+      color: #862e2e;
       line-height: 1.5;
-      min-height: 40px;
-      margin: 8px 0;
-    }
-    .btn-adopt {
-      width: 100%;
-      padding: 8px 12px;
-      background: #ff6b81;
-      color: #ffffff;
-      border: none;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(255, 107, 129, 0.35);
-      transition: all 0.2s;
-    }
-    .btn-adopt:hover {
-      background: #fa5252;
-      transform: translateY(-1px);
+      margin-bottom: 10px;
     }
 
     /* 展覽控制懸浮條 */
     #toolbar {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: 18px;
+      right: 18px;
       background: #fffdf7;
       border: 3px solid #c5a059;
       border-radius: 16px;
@@ -430,92 +308,458 @@
   </style>
 </head>
 <body id="appBody">
-  <!-- 左右分區背景 -->
-  <div id="world">
-    <!-- 左半邊：流浪貓街頭 -->
+  <!-- 共用手繪剪紙與蠟筆濾鏡定義 -->
+  <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+    <defs>
+      <filter id="paper-cutout" x="-8%" y="-8%" width="116%" height="118%">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="2.5" result="dilated" />
+        <feFlood flood-color="#fffdf7" result="paperColor" />
+        <feComposite in="paperColor" in2="dilated" operator="in" result="whiteBorder" />
+        <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#4a3118" flood-opacity="0.22" in="whiteBorder" result="shadowedBorder" />
+        <feMerge>
+          <feMergeNode in="shadowedBorder" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <filter id="crayon-wobble" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+      <pattern id="corrugated-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+        <rect width="10" height="10" fill="#cfa26b" />
+        <rect width="4" height="10" fill="#bd8e56" opacity="0.55" />
+      </pattern>
+      <pattern id="crayon-hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(28)">
+        <line x1="0" y1="3" x2="12" y2="3" stroke="#3b2615" stroke-width="1.1" stroke-dasharray="4,2" opacity="0.16" />
+        <line x1="0" y1="9" x2="12" y2="9" stroke="#3b2615" stroke-width="0.9" stroke-dasharray="6,3" opacity="0.12" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- 左右分區手繪剪紙與蠟筆塗鴉背景 -->
+  <div id="world" aria-hidden="true">
+    <!-- 左半邊：流浪貓街區 -->
     <div class="street-zone" id="streetZone">
-      <div style="position: absolute; top: 16px; left: 16px; background: #fffcee; border: 2px solid #b89464; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 900; color: #6d4c28; transform: rotate(-2deg); box-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
-        🐾 流浪貓街頭 · Stray Cat Street
-      </div>
-      <div class="utility-pole">
-        <div class="pole-cross"></div>
-      </div>
-      <div class="brick-wall">
-        <div class="brick-row"><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div></div>
-        <div class="brick-row" style="transform: translateX(-15px);"><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div></div>
-        <div class="brick-row"><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div></div>
-        <div class="brick-row" style="transform: translateX(-15px);"><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div><div class="brick"></div></div>
-      </div>
-      <div class="cardboard-boxes">
-        <div class="box-1"><div style="font-size: 9px; font-weight: 900; color: #5c3a21; background: #ffffffa0; padding: 2px; border-radius: 2px;">📦 避雨紙箱</div></div>
-        <div class="box-2"><div style="font-size: 9px; font-weight: 900; color: #7a4e2d;">🐟 愛心遮風</div></div>
-      </div>
-      <div class="street-ground-back"></div>
-      <div class="street-ground-front"></div>
+      <div class="paper-dots-overlay"></div>
+      <svg viewBox="0 0 800 620" preserveAspectRatio="xMidYMax slice" class="scene-svg">
+        <!-- 縫線雲朵 -->
+        <g filter="url(#crayon-wobble)" opacity="0.85">
+          <path d="M310 115 C310 95, 345 92, 358 104 C372 86, 412 90, 418 110 C438 112, 442 136, 418 138 L316 138 C296 138, 294 117, 310 115 Z" fill="#ffffff" stroke="#c4b39a" stroke-width="2.5" stroke-dasharray="6,4" />
+          <path d="M590 88 C590 74, 616 70, 626 80 C638 66, 668 70, 672 85 C688 87, 690 104, 672 106 L596 106 C580 106, 578 90, 590 88 Z" fill="#ffffff" stroke="#c4b39a" stroke-width="2.2" stroke-dasharray="5,4" />
+        </g>
+
+        <!-- 左側階梯崩裂紅磚牆 (剪紙效果) -->
+        <g filter="url(#paper-cutout)">
+          <path d="M58 292 L246 292 L246 310 L278 310 L278 332 L302 332 L302 354 L318 354 L318 378 L334 378 L334 452 L58 452 Z" fill="#be5a3e" stroke="#783422" stroke-width="2.5" stroke-linejoin="round" />
+          <path d="M54 282 L252 282 L254 295 L54 295 Z" fill="#bdb5aa" stroke="#736c63" stroke-width="2" />
+          <g stroke="#7c3624" stroke-width="1.8" opacity="0.72" filter="url(#crayon-wobble)">
+            <rect x="66" y="302" width="38" height="16" rx="1" fill="#a84830" />
+            <rect x="114" y="302" width="42" height="16" rx="1" fill="#cc694b" />
+            <rect x="166" y="302" width="36" height="16" rx="1" fill="#9c412b" />
+            <rect x="210" y="302" width="32" height="16" rx="1" fill="#c76246" />
+            <rect x="82" y="324" width="40" height="16" rx="1" fill="#c96548" />
+            <rect x="132" y="324" width="38" height="16" rx="1" fill="#a1442d" />
+            <rect x="180" y="324" width="44" height="16" rx="1" fill="#b55237" />
+            <rect x="234" y="324" width="38" height="16" rx="1" fill="#d17052" />
+            <rect x="66" y="346" width="36" height="16" rx="1" fill="#b24d34" />
+            <rect x="112" y="346" width="46" height="16" rx="1" fill="#cc6b4d" />
+            <rect x="168" y="346" width="40" height="16" rx="1" fill="#9b3e28" />
+            <rect x="218" y="346" width="44" height="16" rx="1" fill="#c25e42" />
+            <rect x="270" y="346" width="28" height="16" rx="1" fill="#a64730" />
+            <rect x="86" y="368" width="42" height="16" rx="1" fill="#9e422b" />
+            <rect x="138" y="368" width="38" height="16" rx="1" fill="#c76447" />
+            <rect x="186" y="368" width="42" height="16" rx="1" fill="#b34e34" />
+            <rect x="238" y="368" width="40" height="16" rx="1" fill="#cf6e50" />
+            <rect x="286" y="368" width="30" height="16" rx="1" fill="#a84931" />
+            <rect x="66" y="390" width="44" height="16" rx="1" fill="#c9684b" />
+            <rect x="120" y="390" width="40" height="16" rx="1" fill="#a5462f" />
+            <rect x="170" y="390" width="44" height="16" rx="1" fill="#bf5c40" />
+            <rect x="224" y="390" width="40" height="16" rx="1" fill="#9e402a" />
+            <rect x="274" y="390" width="42" height="16" rx="1" fill="#c46044" />
+          </g>
+          <path d="M58 292 L246 292 L246 310 L278 310 L278 332 L302 332 L302 354 L318 354 L318 378 L334 378 L334 452 L58 452 Z" fill="url(#crayon-hatch)" />
+        </g>
+
+        <!-- 右中段矮磚牆、瓦楞紙板與木箱堆 -->
+        <g filter="url(#paper-cutout)">
+          <path d="M442 364 L526 364 L526 352 L606 352 L606 446 L442 446 Z" fill="#c56548" stroke="#7c3624" stroke-width="2.2" />
+          <polygon points="502,312 562,306 574,438 512,442" fill="url(#corrugated-pattern)" stroke="#7e5730" stroke-width="2.2" />
+          <g transform="translate(572, 344) rotate(8)">
+            <rect x="0" y="0" width="60" height="52" fill="#cfa066" stroke="#704a25" stroke-width="2.3" />
+            <rect x="7" y="7" width="46" height="38" fill="#b7864d" stroke="#704a25" stroke-width="1.6" />
+            <line x1="7" y1="45" x2="53" y2="7" stroke="#704a25" stroke-width="2.2" />
+          </g>
+          <g transform="translate(562, 396) rotate(-2)">
+            <rect x="0" y="0" width="66" height="52" fill="#d9ad73" stroke="#704a25" stroke-width="2.3" />
+            <line x1="4" y1="18" x2="62" y2="18" stroke="#855a30" stroke-width="1.6" stroke-dasharray="5,3" />
+            <line x1="4" y1="35" x2="62" y2="35" stroke="#855a30" stroke-width="1.6" stroke-dasharray="5,3" />
+          </g>
+          <g transform="translate(432, 412)">
+            <rect x="0" y="0" width="38" height="38" fill="#c99a61" stroke="#6e4a27" stroke-width="2" />
+            <rect x="6" y="6" width="26" height="26" fill="#9c7040" stroke="#6e4a27" stroke-width="1.4" />
+          </g>
+        </g>
+
+        <!-- 人行道、龜裂柏油路與水溝蓋 -->
+        <g>
+          <path d="M0 442 Q40 436 85 442 T175 440 T265 444 T355 439 T445 443 T535 438 T625 442 T715 439 L800 442 L800 500 L0 500 Z" fill="#8d8b88" stroke="#5c5955" stroke-width="2" />
+          <path d="M0 486 L800 488 L800 498 L0 496 Z" fill="#6b6865" />
+          <path d="M0 496 L800 496 L800 582 L0 582 Z" fill="#4d4c4a" />
+          <path d="M0 496 L800 496 L800 582 L0 582 Z" fill="url(#crayon-hatch)" />
+          <g stroke="#2c2b29" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.65" filter="url(#crayon-wobble)">
+            <path d="M110 526 L142 524 L138 548 L106 549 Z" />
+            <line x1="124" y1="525" x2="121" y2="548" />
+            <path d="M235 530 L272 528 L268 552 L232 553 Z" />
+            <path d="M318 532 L352 530 L348 550 L314 551 Z" />
+            <path d="M446 534 L484 532 L480 556 L442 556 Z" />
+            <line x1="464" y1="533" x2="462" y2="556" />
+            <path d="M604 528 L636 526 L632 548 L600 549 Z" />
+          </g>
+          <path d="M0 572 Q65 566 130 572 T260 570 T390 574 T520 569 T650 572 L800 570 L800 620 L0 620 Z" fill="#84827e" stroke="#5c5955" stroke-width="2" />
+        </g>
+
+        <!-- 左側滿溢金屬垃圾桶、綁口黑垃圾袋與歪斜木箱 -->
+        <g filter="url(#paper-cutout)">
+          <ellipse cx="88" cy="436" rx="11" ry="24" transform="rotate(14 88 436)" fill="#9fa4a8" stroke="#53585c" stroke-width="2" />
+          <path d="M100 388 L152 388 L146 462 L106 462 Z" fill="#a7adb2" stroke="#52575c" stroke-width="2.3" />
+          <g stroke="#646a70" stroke-width="2">
+            <line x1="112" y1="395" x2="115" y2="455" />
+            <line x1="126" y1="395" x2="126" y2="455" />
+            <line x1="140" y1="395" x2="137" y2="455" />
+          </g>
+          <path d="M102 388 Q112 368 126 376 Q138 364 150 388 Z" fill="#7c5634" stroke="#4a3118" stroke-width="1.8" />
+          <path d="M108 386 Q116 372 124 384 Z" fill="#74b816" />
+          <path d="M128 385 Q138 370 146 385 Z" fill="#f59f00" />
+          <circle cx="123" cy="376" r="4" fill="#e03131" />
+          <g>
+            <path d="M214 405 C204 414, 198 438, 212 454 C228 462, 260 460, 268 446 C276 430, 266 408, 248 402 L254 391 L239 396 L232 388 L230 400 Z" fill="#222428" stroke="#111214" stroke-width="2" />
+            <path d="M188 418 C176 426, 174 452, 188 462 C204 470, 232 468, 240 456 C246 444, 236 422, 216 416 L220 406 L207 411 L201 404 L200 415 Z" fill="#1b1d20" stroke="#0f1012" stroke-width="2" />
+            <path d="M250 422 C238 430, 236 456, 252 466 C268 474, 298 470, 304 456 C309 442, 298 424, 280 418 L286 408 L272 413 L266 406 L265 416 Z" fill="#26282d" stroke="#111214" stroke-width="2" />
+            <path d="M192 436 Q198 444 208 442" stroke="#ffffff" stroke-width="1.6" fill="none" opacity="0.22" stroke-linecap="round" />
+            <path d="M256 440 Q266 448 280 444" stroke="#ffffff" stroke-width="1.6" fill="none" opacity="0.22" stroke-linecap="round" />
+          </g>
+          <g transform="translate(302, 412) rotate(-22)">
+            <rect x="0" y="0" width="52" height="48" fill="#d4a66a" stroke="#6e4a24" stroke-width="2.4" />
+            <rect x="8" y="8" width="36" height="32" fill="#8b6238" stroke="#6e4a24" stroke-width="1.6" />
+            <line x1="0" y1="0" x2="8" y2="8" stroke="#6e4a24" stroke-width="1.8" />
+            <line x1="52" y1="0" x2="44" y2="8" stroke="#6e4a24" stroke-width="1.8" />
+          </g>
+        </g>
+
+        <!-- 右側三組鐵皮垃圾桶 -->
+        <g filter="url(#paper-cutout)">
+          <g transform="translate(458, 384)">
+            <path d="M6 12 L56 12 L50 82 L12 82 Z" fill="#9ea5ab" stroke="#4f5459" stroke-width="2.2" />
+            <path d="M2 12 Q31 0 60 12 Z" fill="#8a9197" stroke="#4f5459" stroke-width="2" />
+            <rect x="24" y="2" width="14" height="5" rx="2" fill="#6d7378" />
+            <line x1="18" y1="20" x2="20" y2="75" stroke="#5f656b" stroke-width="2" />
+            <line x1="31" y1="20" x2="31" y2="75" stroke="#5f656b" stroke-width="2" />
+            <line x1="44" y1="20" x2="42" y2="75" stroke="#5f656b" stroke-width="2" />
+          </g>
+          <g transform="translate(518, 386)">
+            <path d="M4 12 L54 12 L48 84 L10 84 Z" fill="#a8afb5" stroke="#4f5459" stroke-width="2.2" />
+            <path d="M6 12 Q18 -6 32 4 Q42 -8 52 12 Z" fill="#7d5634" stroke="#4a3118" stroke-width="1.8" />
+            <path d="M12 10 Q20 -2 28 10 Z" fill="#82c91e" />
+            <path d="M32 10 Q42 -2 48 10 Z" fill="#ffd43b" />
+            <line x1="17" y1="20" x2="19" y2="76" stroke="#5f656b" stroke-width="2" />
+            <line x1="30" y1="20" x2="30" y2="76" stroke="#5f656b" stroke-width="2" />
+            <line x1="43" y1="20" x2="41" y2="76" stroke="#5f656b" stroke-width="2" />
+          </g>
+          <g transform="translate(652, 392)">
+            <path d="M4 10 L54 10 L48 80 L10 80 Z" fill="#99a0a6" stroke="#4f5459" stroke-width="2.2" />
+            <ellipse cx="29" cy="10" rx="24" ry="6" fill="#5e432b" stroke="#4f5459" stroke-width="1.8" />
+            <line x1="17" y1="18" x2="19" y2="73" stroke="#5f656b" stroke-width="2" />
+            <line x1="29" y1="18" x2="29" y2="73" stroke="#5f656b" stroke-width="2" />
+            <line x1="41" y1="18" x2="39" y2="73" stroke="#5f656b" stroke-width="2" />
+            <ellipse cx="60" cy="56" rx="10" ry="22" transform="rotate(-16 60 56)" fill="#a5acb2" stroke="#4f5459" stroke-width="2" />
+          </g>
+          <rect x="636" y="438" width="11" height="24" rx="3" fill="#a864a8" stroke="#5c2d5c" stroke-width="1.5" />
+        </g>
+
+        <!-- 經典彎頭灰路燈與垂墜電線 -->
+        <g filter="url(#paper-cutout)">
+          <path d="M168 578 L174 146 C174 114, 198 100, 240 98 L254 98" fill="none" stroke="#8c8378" stroke-width="12" stroke-linecap="round" />
+          <path d="M168 578 L174 146 C174 114, 198 100, 240 98 L254 98" fill="none" stroke="#5c554d" stroke-width="2.2" stroke-linecap="round" />
+          <path d="M240 90 C258 84, 286 88, 294 100 C282 108, 254 108, 240 100 Z" fill="#999187" stroke="#544e46" stroke-width="2.2" />
+          <ellipse cx="272" cy="103" rx="16" ry="5" fill="#fff3bf" stroke="#e6c367" stroke-width="1.5" />
+          <path d="M174 138 C186 154, 192 120, 200 106 C206 130, 226 128, 232 98 C236 122, 242 130, 240 144" fill="none" stroke="#3b2c22" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M200 106 C198 136, 194 156, 198 172" fill="none" stroke="#3b2c22" stroke-width="2.6" stroke-linecap="round" />
+        </g>
+
+        <!-- 散落報紙、汽水罐、寶特瓶、雜草與右下灌木叢 -->
+        <g filter="url(#crayon-wobble)">
+          <g transform="translate(206, 512) rotate(-14)">
+            <rect x="0" y="0" width="32" height="22" fill="#e9e4da" stroke="#7d776d" stroke-width="1.6" />
+            <line x1="4" y1="6" x2="26" y2="6" stroke="#7d776d" stroke-width="1.4" />
+            <line x1="4" y1="11" x2="24" y2="11" stroke="#7d776d" stroke-width="1.4" />
+            <line x1="4" y1="16" x2="18" y2="16" stroke="#7d776d" stroke-width="1.4" />
+          </g>
+          <g transform="translate(106, 488) rotate(12)">
+            <rect x="0" y="0" width="12" height="20" rx="2" fill="#e03131" stroke="#7a1b1b" stroke-width="1.5" />
+            <rect x="0" y="6" width="12" height="5" fill="#f8f9fa" />
+          </g>
+          <g transform="translate(212, 560) rotate(78)">
+            <rect x="0" y="0" width="12" height="22" rx="2" fill="#e03131" stroke="#7a1b1b" stroke-width="1.5" />
+            <rect x="0" y="7" width="12" height="6" fill="#f8f9fa" />
+          </g>
+          <g transform="translate(612, 518) rotate(-8)">
+            <rect x="0" y="0" width="24" height="11" rx="4" fill="#74c0fc" stroke="#1c7ed6" stroke-width="1.5" />
+            <rect x="8" y="0" width="7" height="11" fill="#339af0" />
+          </g>
+          <g transform="translate(642, 558) rotate(14)">
+            <rect x="0" y="0" width="24" height="11" rx="4" fill="#74c0fc" stroke="#1c7ed6" stroke-width="1.5" />
+            <rect x="9" y="0" width="6" height="11" fill="#1971c2" />
+          </g>
+          <g transform="translate(496, 510) rotate(-18)">
+            <rect x="0" y="0" width="20" height="10" rx="3" fill="#63e6be" stroke="#0ca678" stroke-width="1.5" />
+          </g>
+          <path d="M538 514 L546 508 L554 514 L550 524 L540 522 Z" fill="#f3ebd8" stroke="#9e927c" stroke-width="1.4" />
+          <path d="M614 584 L622 578 L630 585 L626 594 L616 592 Z" fill="#f3ebd8" stroke="#9e927c" stroke-width="1.4" />
+          <path d="M168 576 L154 562 M168 576 L166 556 M168 576 L184 564" stroke="#6b9e3e" stroke-width="4" stroke-linecap="round" />
+          <path d="M376 576 L366 552 M376 576 L378 548 M376 576 L390 556" stroke="#6b9e3e" stroke-width="4" stroke-linecap="round" />
+          <path d="M558 578 L544 550 M558 578 L560 544 M558 578 L572 554" stroke="#6b9e3e" stroke-width="4" stroke-linecap="round" />
+          <path d="M430 434 L420 404 M430 434 L434 398 M430 434 L444 410" stroke="#6b9e3e" stroke-width="3.5" stroke-linecap="round" />
+          <g transform="translate(52, 542)">
+            <path d="M4 12 L74 12 L68 74 L10 74 Z" fill="#92999e" stroke="#4f5459" stroke-width="2.4" />
+            <ellipse cx="39" cy="12" rx="36" ry="8" fill="#adb5bd" stroke="#4f5459" stroke-width="2" />
+          </g>
+          <g filter="url(#paper-cutout)">
+            <path d="M664 606 C658 584, 678 568, 696 572 C704 552, 732 544, 748 558 C762 542, 790 546, 798 568 C806 582, 804 606, 792 612 L668 612 Z" fill="#6b9e3e" stroke="#4f7a2c" stroke-width="2.5" />
+            <path d="M684 590 Q704 576 720 588 M740 578 Q760 566 776 582" stroke="#4f7a2c" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6" />
+          </g>
+        </g>
+
+        <!-- 手作紙膠帶區域名牌（位於背景層，不會擋住貓咪） -->
+        <g transform="translate(274, 212) rotate(-2)" filter="url(#paper-cutout)">
+          <rect x="0" y="0" width="164" height="36" rx="4" fill="#fff9eb" stroke="#a67c52" stroke-width="2.2" stroke-dasharray="5,3" />
+          <rect x="52" y="-10" width="60" height="14" fill="#ffd8a8" opacity="0.82" transform="rotate(2 82 -3)" />
+          <text x="82" y="24" text-anchor="middle" fill="#6d4726" font-size="16" font-weight="900">流浪貓街區</text>
+        </g>
+      </svg>
     </div>
 
-    <!-- 右半邊：流浪動物收容所 -->
+    <!-- 右半邊：貓狗躍動園區 -->
     <div class="shelter-zone" id="shelterZone">
-      <div style="position: absolute; top: 16px; right: 16px; background: #fffdf0; border: 2px solid #d9480f; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 900; color: #d9480f; transform: rotate(2deg); box-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
-        🏡 愛心收容所 · Animal Shelter
-      </div>
-      <div class="fence-container">
-        <div class="fence-post"></div><div class="fence-post"></div><div class="fence-post"></div><div class="fence-post"></div><div class="fence-post"></div><div class="fence-post"></div>
-      </div>
-      <div class="shelter-props">
-        <div class="litter-box">✨ 乾淨貓砂盆</div>
-        <div style="width: 32px; height: 22px; background: #ffe3e3; border: 2px solid #ff8787; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">🐟</div>
-      </div>
-      <div class="shelter-lawn-back" id="lawnBack"></div>
-      <div class="shelter-lawn-front" id="lawnFront"></div>
+      <div class="paper-dots-overlay"></div>
+      <svg viewBox="0 0 800 620" preserveAspectRatio="xMidYMax slice" class="scene-svg">
+        <!-- 蠟筆暖太陽與縫線雲朵 -->
+        <g transform="translate(686, 86)" filter="url(#crayon-wobble)">
+          <circle cx="0" cy="0" r="34" fill="#ffd166" stroke="#f79f4a" stroke-width="3" stroke-dasharray="6,4" />
+          <circle cx="0" cy="0" r="44" fill="none" stroke="#f79f4a" stroke-width="2.2" stroke-dasharray="4,8" opacity="0.65" />
+        </g>
+        <g filter="url(#crayon-wobble)" opacity="0.9">
+          <path d="M110 108 C110 88, 146 84, 158 96 C174 78, 214 82, 220 102 C240 104, 244 128, 220 130 L116 130 C96 130, 94 110, 110 108 Z" fill="#ffffff" stroke="#d6c2a5" stroke-width="2.4" stroke-dasharray="6,4" />
+        </g>
+
+        <!-- 後層撕紙綠草地 -->
+        <path d="M0 448 Q35 438 70 448 T140 445 T210 450 T280 443 T350 449 T420 444 T490 450 T560 443 T630 448 T700 444 T770 449 L800 446 L800 620 L0 620 Z" fill="#82c91e" opacity="0.88" />
+
+        <!-- 二層樓現代建築「貓狗躍動園區」（手繪剪紙與蠟筆筆觸） -->
+        <g filter="url(#paper-cutout)">
+          <polygon points="614,194 800,154 800,180 614,218" fill="#777b80" stroke="#3c4045" stroke-width="2.2" />
+          <polygon points="694,254 800,236 800,256 694,274" fill="#868b91" stroke="#3c4045" stroke-width="2.2" />
+          <polygon points="94,234 134,226 164,236 164,274 94,278" fill="#f3e5cd" stroke="#5c4b3b" stroke-width="2.2" />
+          <polygon points="94,234 126,238 126,276 94,278" fill="#e6d3b5" stroke="#5c4b3b" stroke-width="2" />
+          <polygon points="688,368 792,386 792,456 688,468" fill="#f3e5cd" stroke="#5c4b3b" stroke-width="2.2" />
+          <rect x="702" y="406" width="26" height="56" fill="#63686e" stroke="#34383d" stroke-width="2" />
+          <rect x="738" y="410" width="28" height="36" fill="#7494ab" stroke="#34383d" stroke-width="2" />
+          <line x1="752" y1="410" x2="752" y2="446" stroke="#34383d" stroke-width="2" />
+          <rect x="772" y="414" width="14" height="30" fill="#7494ab" stroke="#34383d" stroke-width="1.8" />
+          <polygon points="30,290 614,174 700,232 700,468 30,458" fill="#f4e6cf" stroke="#594a3c" stroke-width="2.5" stroke-linejoin="round" />
+          <polygon points="614,174 700,232 700,468 614,468" fill="#e8d6ba" stroke="#594a3c" stroke-width="2.2" />
+          <polygon points="30,290 614,174 700,232 700,468 30,458" fill="url(#crayon-hatch)" opacity="0.55" />
+          <polygon points="22,282 616,162 706,226 706,244 616,184 22,298" fill="#82878d" stroke="#3a3e42" stroke-width="2.4" stroke-linejoin="round" />
+          <polygon points="22,298 616,184 616,196 22,306" fill="#686d73" stroke="#3a3e42" stroke-width="1.8" />
+          <g>
+            <polygon points="38,302 248,266 248,452 38,448" fill="#7c9eb5" stroke="#3a3e42" stroke-width="2" />
+            <rect x="34" y="298" width="16" height="154" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <rect x="68" y="292" width="16" height="160" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <rect x="102" y="286" width="14" height="166" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <rect x="132" y="281" width="14" height="171" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <rect x="164" y="276" width="22" height="176" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <rect x="208" y="268" width="14" height="184" fill="#868b91" stroke="#3a3e42" stroke-width="2" />
+            <polygon points="38,364 248,352 248,366 38,376" fill="#8f949a" stroke="#3a3e42" stroke-width="2" />
+          </g>
+          <g>
+            <polygon points="342,272 440,258 440,328 342,334" fill="#8eb4cc" stroke="#2c333a" stroke-width="2.6" />
+            <line x1="366" y1="268" x2="366" y2="332" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="392" y1="265" x2="392" y2="330" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="416" y1="261" x2="416" y2="329" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="342" y1="292" x2="440" y2="281" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="352" y1="286" x2="378" y2="268" stroke="#ffffff" stroke-width="2.4" opacity="0.6" stroke-linecap="round" />
+            <polygon points="472,254 584,238 584,320 472,326" fill="#8eb4cc" stroke="#2c333a" stroke-width="2.6" />
+            <line x1="500" y1="250" x2="500" y2="324" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="528" y1="246" x2="528" y2="323" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="556" y1="242" x2="556" y2="321" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="472" y1="276" x2="584" y2="264" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="490" y1="268" x2="520" y2="248" stroke="#ffffff" stroke-width="2.4" opacity="0.6" stroke-linecap="round" />
+          </g>
+          <rect x="634" y="256" width="10" height="62" fill="#4f5c66" stroke="#2c333a" stroke-width="1.8" />
+          <rect x="656" y="266" width="10" height="54" fill="#4f5c66" stroke="#2c333a" stroke-width="1.8" />
+          <rect x="676" y="276" width="9" height="46" fill="#4f5c66" stroke="#2c333a" stroke-width="1.8" />
+          <g>
+            <rect x="314" y="382" width="268" height="78" fill="#7ca2ba" stroke="#2c333a" stroke-width="2.6" />
+            <line x1="348" y1="382" x2="348" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="382" y1="382" x2="382" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="422" y1="382" x2="422" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="462" y1="382" x2="462" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="502" y1="382" x2="502" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="542" y1="382" x2="542" y2="460" stroke="#2c333a" stroke-width="2.2" />
+            <line x1="314" y1="406" x2="582" y2="406" stroke="#2c333a" stroke-width="2.2" />
+            <polygon points="322,400 342,386 350,386 330,400" fill="#fff9db" opacity="0.45" />
+            <polygon points="472,400 496,386 506,386 482,400" fill="#fff9db" opacity="0.45" />
+          </g>
+          <g>
+            <line x1="262" y1="324" x2="604" y2="294" stroke="#646970" stroke-width="4.5" stroke-linecap="round" />
+            <g stroke="#6e737a" stroke-width="2.6" stroke-linecap="round">
+              <line x1="266.0" y1="324.0" x2="266.0" y2="354.0" />
+                <line x1="280.5" y1="322.7" x2="280.5" y2="352.8" />
+                <line x1="295.0" y1="321.5" x2="295.0" y2="351.6" />
+                <line x1="309.6" y1="320.2" x2="309.6" y2="350.3" />
+                <line x1="324.1" y1="319.0" x2="324.1" y2="349.1" />
+                <line x1="338.6" y1="317.7" x2="338.6" y2="347.9" />
+                <line x1="353.1" y1="316.4" x2="353.1" y2="346.7" />
+                <line x1="367.7" y1="315.2" x2="367.7" y2="345.5" />
+                <line x1="382.2" y1="313.9" x2="382.2" y2="344.3" />
+                <line x1="396.7" y1="312.7" x2="396.7" y2="343.0" />
+                <line x1="411.2" y1="311.4" x2="411.2" y2="341.8" />
+                <line x1="425.7" y1="310.1" x2="425.7" y2="340.6" />
+                <line x1="440.3" y1="308.9" x2="440.3" y2="339.4" />
+                <line x1="454.8" y1="307.6" x2="454.8" y2="338.2" />
+                <line x1="469.3" y1="306.3" x2="469.3" y2="337.0" />
+                <line x1="483.8" y1="305.1" x2="483.8" y2="335.7" />
+                <line x1="498.3" y1="303.8" x2="498.3" y2="334.5" />
+                <line x1="512.9" y1="302.6" x2="512.9" y2="333.3" />
+                <line x1="527.4" y1="301.3" x2="527.4" y2="332.1" />
+                <line x1="541.9" y1="300.0" x2="541.9" y2="330.9" />
+                <line x1="556.4" y1="298.8" x2="556.4" y2="329.7" />
+                <line x1="571.0" y1="297.5" x2="571.0" y2="328.4" />
+                <line x1="585.5" y1="296.3" x2="585.5" y2="327.2" />
+                <line x1="600.0" y1="295.0" x2="600.0" y2="326.0" />
+            </g>
+            <polygon points="240,352 606,324 676,346 676,472 574,472 574,366 240,378" fill="#8b9096" stroke="#3a3e42" stroke-width="2.4" stroke-linejoin="round" />
+            <polygon points="246,378 574,366 574,380 246,390" fill="#6b7076" />
+            <rect x="254" y="376" width="22" height="84" fill="#92979d" stroke="#3a3e42" stroke-width="2.2" />
+            <rect x="386" y="372" width="26" height="94" fill="#92979d" stroke="#3a3e42" stroke-width="2.2" />
+          </g>
+        </g>
+
+        <!-- 前層撕紙綠草地 -->
+        <path d="M0 494 Q30 482 65 494 T135 490 T205 496 T275 488 T345 495 T415 489 T485 495 T555 488 T625 494 T695 490 T765 495 L800 492 L800 620 L0 620 Z" fill="#94d82d" stroke="#5a8c27" stroke-width="1.8" stroke-opacity="0.35" />
+        <g stroke="#4f8222" stroke-width="2.4" stroke-linecap="round" opacity="0.65" filter="url(#crayon-wobble)">
+          <path d="M460 538 L454 522 M460 538 L462 518 M460 538 L468 524" />
+          <path d="M620 556 L614 542 M620 556 L622 538 M620 556 L628 544" />
+          <path d="M726 534 L720 518 M726 534 L728 514 M726 534 L735 520" />
+          <path d="M350 562 L344 548 M350 562 L352 544 M350 562 L358 550" />
+        </g>
+
+        <!-- 經典木質招牌「貓狗躍動園區」與探頭小貓小狗（位於背景層，活生生貓咪會走在前方） -->
+        <g transform="translate(46, 404)" filter="url(#paper-cutout)">
+          <rect x="6" y="42" width="16" height="106" rx="4" fill="#6b4423" stroke="#3d2410" stroke-width="2.4" />
+          <rect x="206" y="42" width="16" height="106" rx="4" fill="#6b4423" stroke="#3d2410" stroke-width="2.4" />
+          <path d="M20 56 Q114 14 208 56 L208 134 L20 134 Z" fill="#f8d4ab" stroke="#4a2c16" stroke-width="2.6" stroke-linejoin="round" />
+          <path d="M22 132 L22 108 Q52 94 82 114 Q118 90 158 112 Q184 98 206 112 L206 132 Z" fill="#56b8b8" opacity="0.88" />
+          <path d="M78 132 Q114 96 154 132 Z" fill="#f07878" opacity="0.9" />
+          <path d="M22 132 Q44 114 68 132 Z" fill="#f28482" opacity="0.85" />
+          <g fill="#4a2c16">
+            <circle cx="122" cy="52" r="4.5" />
+            <circle cx="116" cy="45" r="2.2" />
+            <circle cx="122" cy="42" r="2.2" />
+            <circle cx="128" cy="45" r="2.2" />
+            <circle cx="72" cy="112" r="3.6" />
+            <circle cx="67" cy="107" r="1.8" />
+            <circle cx="72" cy="104" r="1.8" />
+            <circle cx="77" cy="107" r="1.8" />
+          </g>
+          <text x="114" y="98" text-anchor="middle" fill="#422614" font-size="26" font-weight="900" letter-spacing="1.5">貓狗躍動園區</text>
+          <!-- 左上探頭灰白小貓 -->
+          <g transform="translate(26, 4)">
+            <polygon points="8,24 12,2 28,15" fill="#9ea3a8" stroke="#3d2410" stroke-width="2.4" stroke-linejoin="round" />
+            <polygon points="12,20 14,8 23,16" fill="#ffb8c2" />
+            <polygon points="56,24 52,2 36,15" fill="#9ea3a8" stroke="#3d2410" stroke-width="2.4" stroke-linejoin="round" />
+            <polygon points="52,20 50,8 41,16" fill="#ffb8c2" />
+            <ellipse cx="32" cy="34" rx="28" ry="23" fill="#a7acb2" stroke="#3d2410" stroke-width="2.4" />
+            <path d="M12 40 Q32 28 52 40 Q46 56 32 56 Q18 56 12 40 Z" fill="#fffdf9" />
+            <circle cx="21" cy="34" r="3" fill="#2b1e16" />
+            <circle cx="43" cy="34" r="3" fill="#2b1e16" />
+            <polygon points="30,39 34,39 32,42" fill="#ff8fa3" />
+            <path d="M27 44 Q30 47 32 43 Q34 47 37 44" fill="none" stroke="#3d2410" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="2" y1="35" x2="12" y2="37" stroke="#3d2410" stroke-width="1.6" stroke-linecap="round" />
+            <line x1="2" y1="41" x2="12" y2="41" stroke="#3d2410" stroke-width="1.6" stroke-linecap="round" />
+            <line x1="52" y1="37" x2="62" y2="35" stroke="#3d2410" stroke-width="1.6" stroke-linecap="round" />
+            <line x1="52" y1="41" x2="62" y2="41" stroke="#3d2410" stroke-width="1.6" stroke-linecap="round" />
+            <ellipse cx="14" cy="54" rx="7" ry="5" fill="#fffdf9" stroke="#3d2410" stroke-width="2" />
+            <ellipse cx="50" cy="54" rx="7" ry="5" fill="#fffdf9" stroke="#3d2410" stroke-width="2" />
+          </g>
+          <!-- 右上探頭黑白小狗 -->
+          <g transform="translate(142, 10)">
+            <ellipse cx="10" cy="28" rx="10" ry="16" transform="rotate(18 10 28)" fill="#3b3634" stroke="#241e1c" stroke-width="2.4" />
+            <ellipse cx="58" cy="30" rx="10" ry="16" transform="rotate(-18 58 30)" fill="#3b3634" stroke="#241e1c" stroke-width="2.4" />
+            <ellipse cx="34" cy="34" rx="25" ry="22" fill="#3b3634" stroke="#241e1c" stroke-width="2.4" />
+            <path d="M29 14 Q34 12 39 14 L42 36 Q52 40 48 50 Q34 58 20 50 Q16 40 26 36 Z" fill="#fffdf9" />
+            <circle cx="22" cy="32" r="3" fill="#1a1513" />
+            <circle cx="46" cy="32" r="3" fill="#1a1513" />
+            <circle cx="21" cy="31" r="1" fill="#ffffff" />
+            <circle cx="45" cy="31" r="1" fill="#ffffff" />
+            <ellipse cx="34" cy="40" rx="4.2" ry="3.2" fill="#241e1c" />
+            <path d="M28 45 Q34 50 40 45" fill="none" stroke="#241e1c" stroke-width="2" stroke-linecap="round" />
+            <path d="M31 47 Q34 58 38 47 Z" fill="#ff758f" stroke="#c92a49" stroke-width="1.4" />
+            <ellipse cx="14" cy="54" rx="7" ry="5" fill="#fffdf9" stroke="#241e1c" stroke-width="2" />
+            <ellipse cx="52" cy="54" rx="7" ry="5" fill="#fffdf9" stroke="#241e1c" stroke-width="2" />
+          </g>
+        </g>
+      </svg>
     </div>
   </div>
+
+  <!-- 左上角手作紙膠帶 QR Code 便條（100% 離線內嵌 SVG，不遮擋貓咪活動區） -->
+  <a
+    href="https://lynn050.github.io/info-page/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="qr-sticky-note"
+    title="掃描或點擊前往動保資訊頁"
+  >
+    <div class="qr-washi-tape"></div>
+    <div class="qr-header-title">掃描看更多資訊</div>
+    <div class="qr-header-sub">動保衛教 · 認養指南</div>
+    <div class="qr-box">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges" width="100%" height="100%" role="img" aria-label="前往 https://lynn050.github.io/info-page/ 的 QR Code">
+        <path fill="#fffdf7" d="M0 0h33v33H0z" />
+        <path stroke="#3b2615" d="M2 2.5h7m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m2 0h7M2 3.5h1m5 0h1m1 0h1m4 0h1m2 0h1m1 0h1m1 0h1m1 0h1m5 0h1M2 4.5h1m1 0h3m1 0h1m2 0h1m5 0h1m6 0h1m1 0h3m1 0h1M2 5.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m2 0h1m4 0h1m1 0h3m1 0h1M2 6.5h1m1 0h3m1 0h1m3 0h3m1 0h2m3 0h1m2 0h1m1 0h3m1 0h1M2 7.5h1m5 0h1m6 0h1m5 0h2m1 0h1m5 0h1M2 8.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M10 9.5h2m1 0h2m3 0h3M2 10.5h1m1 0h2m1 0h3m1 0h1m3 0h1m2 0h5m1 0h1m2 0h1m1 0h2M2 11.5h3m1 0h1m4 0h2m2 0h2m1 0h5m1 0h1m1 0h1m3 0h1M2 12.5h1m5 0h1m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2M2 13.5h1m1 0h1m2 0h1m2 0h1m1 0h2m3 0h1m2 0h2m2 0h3m3 0h1M5 14.5h4m1 0h3m1 0h1m1 0h2m1 0h3m1 0h1m3 0h2M2 15.5h1m1 0h1m4 0h1m2 0h2m2 0h3m2 0h1m1 0h2m3 0h3M3 16.5h1m2 0h1m1 0h1m4 0h1m1 0h1m3 0h3m1 0h2m1 0h1m1 0h3M2 17.5h1m1 0h4m3 0h1m2 0h1m1 0h2m4 0h1m2 0h1m3 0h1M3 18.5h3m2 0h1m1 0h1m1 0h2m2 0h1m3 0h1m4 0h3m1 0h1M7 19.5h1m1 0h2m1 0h1m3 0h2m1 0h1m2 0h2m1 0h1m1 0h3M2 20.5h1m1 0h3m1 0h1m1 0h2m2 0h4m2 0h1m1 0h2m1 0h2m1 0h1M6 21.5h2m2 0h3m2 0h2m2 0h2m1 0h1m2 0h2m1 0h1M3 22.5h2m1 0h1m1 0h1m2 0h2m2 0h2m2 0h2m1 0h7M10 23.5h3m1 0h1m3 0h3m1 0h1m3 0h5M2 24.5h7m1 0h2m2 0h1m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m1 0h1M2 25.5h1m5 0h1m1 0h1m1 0h1m1 0h3m5 0h1m3 0h2m2 0h1M2 26.5h1m1 0h3m1 0h1m2 0h1m2 0h1m4 0h1m2 0h5m1 0h1M2 27.5h1m1 0h3m1 0h1m1 0h2m2 0h2m1 0h1m1 0h1m1 0h1m4 0h2m2 0h1M2 28.5h1m1 0h3m1 0h1m1 0h1m2 0h4m2 0h2m4 0h1m2 0h1m1 0h1M2 29.5h1m5 0h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m1 0h1M2 30.5h7m1 0h1m6 0h1m2 0h3m1 0h1m1 0h1m2 0h1" />
+      </svg>
+    </div>
+    <div class="qr-url">lynn050.github.io/info-page</div>
+  </a>
 
   <!-- 頂部紙膠帶風格進度條與計數器 -->
   <div class="top-header">
     <div class="title-banner">
-      <span>🐾</span>
-      <h1>貓咪互動樂園 · 動保教育展</h1>
-      <span>🐾</span>
+      <h1>貓咪互動樂園 · 貓狗躍動園區</h1>
     </div>
     <div class="progress-tape" id="progressTape">
-      <span id="crisisLabel" style="display:none; color: #e03131;">🚨 超載警報！</span>
-      <span>目前貓咪數量:</span>
+      <span id="crisisLabel" style="display:none; color: #e03131;">超載警報！</span>
+      <span>目前貓咪數量</span>
       <span id="catCountText" style="font-size: 16px; color: #d9480f;">0</span>
-      <span style="font-size: 11px; color: #a37951;">/ 25 (容納上限)</span>
+      <span style="font-size: 11px; color: #a37951;">/ 25</span>
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progressBarFill"></div>
       </div>
-      <span id="percentText" style="font-size: 11px; color: #868e96;">0%</span>
+      <span id="percentText" style="font-size: 11px; color: #7a5c3d;">0%</span>
     </div>
   </div>
 
-  <!-- 中央手作超載警告牌 -->
+  <!-- 上方天空區手作超載警告牌 -->
   <div id="crisisAlertBoard">
-    <h2>🚨 空間不夠了！流浪貓的困境 🚨</h2>
-    <p>當數量過多，收容所與街頭將面臨資源耗盡與生存空間不足。<br>我們需要從源頭解決問題！</p>
-    <div style="background: #ffe3e3; border: 1px solid #ffc9c9; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #a61e4d;">
-      💡 請點擊任意貓咪或「愛心認養」帶走浪浪，即可解除危機！
+    <h2>空間不夠了！流浪貓的困境</h2>
+    <p>當數量過多，收容所與街頭將面臨資源耗盡與生存空間不足，我們需要從源頭解決問題。</p>
+    <div style="background: #ffe3e3; border: 1px solid #ffc9c9; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; color: #a61e4d; display: inline-block;">
+      點擊任意貓咪或按「愛心認養」帶走浪浪，即可解除危機
     </div>
   </div>
 
-  <!-- 科普衛教輪播看板 -->
-  <div class="edu-sticky-note" id="eduNote">
-    <div class="sticky-tape"></div>
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5c290; padding-bottom: 4px;">
-      <span id="eduTag" style="font-size: 11px; font-weight: 900; color: #8c5025;">✂️ 源頭減量 · TNVR</span>
-      <span id="eduTimer" style="font-size: 10px; font-weight: bold; color: #b07d4b; background: #ffffffa0; padding: 1px 6px; border-radius: 10px;">10s</span>
-    </div>
-    <div class="edu-content" id="eduContent">
-      推廣 TNVR：捕捉、絕育、打疫苗、放回，從源頭控制數量！
-    </div>
-    <button class="btn-adopt" id="btnAdoptSticky">
-      💖 點擊認養帶走一隻浪浪 (-1)
-    </button>
-  </div>
-
-  <!-- 2D 畫布 -->
-  <canvas id="canvas" style="position: absolute; inset: 0; z-index: 20; cursor: pointer;"></canvas>
+  <!-- 2D 互動畫布 (位於背景層上方) -->
+  <canvas id="canvas" style="position: absolute; inset: 0; z-index: 10; cursor: pointer;"></canvas>
 
   <!-- 展覽控制懸浮條 -->
   <div id="toolbar">
@@ -528,56 +772,7 @@
   </div>
 
   <script>
-    // --- 1. 動保教育輪播看板資料 (每 10 秒自動輪播) ---
-    const EDU_TIPS = [
-      {
-        tag: '✂️ 源頭減量 · TNVR',
-        content: '推廣 TNVR：捕捉、絕育、打疫苗、放回，從源頭控制數量！',
-        bg: '#fff9db'
-      },
-      {
-        tag: '🏡 給浪浪一個家',
-        content: '認養代替購買：給收容所與街頭的浪浪一個溫暖的家。',
-        bg: '#fff0f6'
-      },
-      {
-        tag: '🥣 友善社區守則',
-        content: '乾淨餵食守則：餵食請用容器，吃完要收拾，不留殘渣破壞環境。',
-        bg: '#f8f9fa'
-      },
-      {
-        tag: '🐾 尊重動物習性',
-        content: '保持適當距離：遇見不熟悉的街貓請勿強行觸摸，避免貓咪緊張。',
-        bg: '#f1f3f5'
-      },
-      {
-        tag: '📞 緊急救援通報',
-        content: '尋求專業協助：遇到受傷浪浪，請通報 1959 動保專線。',
-        bg: '#fff4e6'
-      }
-    ];
-
-    let currentEduIndex = 0;
-    let eduSeconds = 10;
-    const eduTagEl = document.getElementById('eduTag');
-    const eduContentEl = document.getElementById('eduContent');
-    const eduTimerEl = document.getElementById('eduTimer');
-    const eduNoteEl = document.getElementById('eduNote');
-
-    setInterval(() => {
-      eduSeconds--;
-      if (eduSeconds <= 0) {
-        currentEduIndex = (currentEduIndex + 1) % EDU_TIPS.length;
-        eduSeconds = 10;
-        const tip = EDU_TIPS[currentEduIndex];
-        eduTagEl.textContent = tip.tag;
-        eduContentEl.textContent = tip.content;
-        eduNoteEl.style.backgroundColor = tip.bg;
-      }
-      eduTimerEl.textContent = eduSeconds + 's';
-    }, 1000);
-
-    // --- 2. 輕量 Web Audio API 音效合成器 (100% 離線) ---
+    // --- 1. 輕量 Web Audio API 音效合成器 (100% 離線) ---
     class SoundEngine {
       constructor() {
         this.ctx = null;
@@ -611,7 +806,7 @@
           gain.connect(this.ctx.destination);
           osc.start(t);
           osc.stop(t + 0.42);
-        } catch(e) {}
+        } catch (e) {}
       }
       playBoing() {
         if (!this.enabled) return;
@@ -630,7 +825,7 @@
           gain.connect(this.ctx.destination);
           osc.start(t);
           osc.stop(t + 0.24);
-        } catch(e) {}
+        } catch (e) {}
       }
       playAdoptChime() {
         if (!this.enabled) return;
@@ -652,12 +847,12 @@
             osc.start(t + idx * 0.09);
             osc.stop(t + idx * 0.09 + 0.48);
           });
-        } catch(e) {}
+        } catch (e) {}
       }
     }
     const sound = new SoundEngine();
 
-    // --- 3. 手繪蠟筆貓產生器 (Canvas 產出透明 PNG) ---
+    // --- 2. 手繪蠟筆貓產生器 (Canvas 產出透明 PNG) ---
     function generateCrayonCatData(color, bellyColor) {
       const c = document.createElement('canvas');
       c.width = 220; c.height = 220;
@@ -729,13 +924,13 @@
       generateCrayonCatData('#868e96', '#f1f3f5')
     ];
 
-    // --- 4. 2D 物理與超載危機系統 (LIMIT = 25) ---
+    // --- 3. 2D 物理與超載危機系統 (LIMIT = 25) ---
     const LIMIT = 25;
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let width = window.innerWidth;
     let height = window.innerHeight;
-    let groundY = height - 90;
+    let groundY = height - 96;
     const cats = [];
     let isCrisisMode = false;
 
@@ -744,19 +939,18 @@
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-      groundY = height - 90;
+      groundY = height - 96;
     }
     window.addEventListener('resize', resize);
     resize();
 
-    // 更新計數器與危機狀態
     function updateCrisisState() {
       const activeCount = cats.filter(c => c.state !== 'ADOPTED' && c.state !== 'DEPARTING').length;
       document.getElementById('catCountText').textContent = activeCount;
 
       const pct = Math.min(100, Math.round((activeCount / LIMIT) * 100));
       document.getElementById('percentText').textContent = pct + '%';
-      
+
       const barFill = document.getElementById('progressBarFill');
       barFill.style.width = pct + '%';
       if (activeCount >= LIMIT) {
@@ -789,13 +983,16 @@
     function spawnCat(imgSrc, name = '手繪貓咪') {
       const img = new Image();
       img.src = imgSrc;
-      const x = Math.random() * (width - 240) + 120;
+      // 避開左上角 QR Code 便條 (x >= 220)，確保貓咪降落與活動都不會被便條遮擋
+      const minSpawnX = Math.min(220, width * 0.25);
+      const maxSpawnX = Math.max(minSpawnX + 120, width - 130);
+      const x = minSpawnX + Math.random() * (maxSpawnX - minSpawnX);
       const cat = {
         img,
         name,
         x,
         y: -100,
-        vx: (Math.random() - 0.5) * 40,
+        vx: (Math.random() - 0.5) * 35,
         vy: 110,
         targetX: x,
         width: 100,
@@ -803,8 +1000,6 @@
         state: 'AIRDROP',
         flipX: Math.random() > 0.5,
         rotation: 0,
-        squashX: 1,
-        squashY: 1,
         walkCycle: 0,
         stateTimer: 0,
         alpha: 1,
@@ -817,7 +1012,6 @@
       updateCrisisState();
     }
 
-    // 認養移除一隻貓咪 (解除危機核心)
     function adoptCat(catToAdopt) {
       const target = catToAdopt || cats.find(c => c.state !== 'ADOPTED' && c.state !== 'DEPARTING');
       if (!target) return;
@@ -843,7 +1037,6 @@
       updateCrisisState();
     }
 
-    // 點擊貓咪互動 / 認養
     canvas.addEventListener('click', (e) => {
       sound.init();
       const rect = canvas.getBoundingClientRect();
@@ -854,12 +1047,10 @@
         const c = cats[i];
         if (c.state === 'ADOPTED' || c.state === 'DEPARTING') continue;
         if (Math.hypot(mx - c.x, my - (c.y - c.height / 2)) < c.width / 2 + 15) {
-          // 危機模式下點擊直接認養
           if (isCrisisMode) {
             adoptCat(c);
             return;
           }
-          // 平時摸摸歡呼
           c.vy = -160;
           c.speech = '喵~ 摸摸我！💖';
           c.speechTimer = 2.2;
@@ -875,7 +1066,6 @@
       setTimeout(() => spawnCat(src, '樂園浪浪 ' + (idx + 1)), idx * 500 + 200);
     });
 
-    // 動畫主迴圈
     let lastTime = performance.now();
     function animate(time) {
       const dt = Math.min((time - lastTime) / 1000, 0.1);
@@ -889,7 +1079,6 @@
         c.walkCycle += dt;
         if (c.speechTimer > 0) c.speechTimer -= dt;
 
-        // 愛心粒子
         for (let h = c.hearts.length - 1; h >= 0; h--) {
           const heart = c.hearts[h];
           heart.y += heart.vy * dt;
@@ -897,21 +1086,19 @@
           if (heart.alpha <= 0) c.hearts.splice(h, 1);
         }
 
-        // 狀態機
         if (c.state === 'AIRDROP') {
           c.y += c.vy * dt;
-          c.x += c.vx * dt;
+          c.x = Math.max(210, Math.min(width - 90, c.x + c.vx * dt));
           c.rotation = Math.sin(c.walkCycle * 4) * 0.15;
           if (c.y >= groundY - 10) {
             c.y = groundY - 10;
             c.state = 'WALK';
-            c.targetX = Math.random() * (width - 200) + 100;
+            c.targetX = Math.random() * (width - 180) + 90;
             sound.playBoing();
           }
         } else if (c.state === 'WALK') {
           const dx = c.targetX - c.x;
           c.flipX = dx > 0;
-          // 超載危機模式下移動速度變慢 (32 vs 65) 表現擁擠感
           const speed = isCrisisMode ? 32 : 65;
           if (Math.abs(dx) > 10) {
             c.x += Math.sign(dx) * speed * dt;
@@ -920,11 +1107,10 @@
             c.rotation = 0;
             if (c.stateTimer > 3.0) {
               c.stateTimer = 0;
-              c.targetX = Math.random() * (width - 200) + 100;
+              c.targetX = Math.random() * (width - 180) + 90;
             }
           }
         } else if (c.state === 'ADOPTED') {
-          // 歡樂認養離場飛翔
           c.y += c.vy * dt;
           c.x += c.vx * dt;
           c.alpha -= dt * 0.38;
@@ -937,7 +1123,6 @@
           }
         }
 
-        // 繪製貓咪本體 (帶剪紙厚度陰影)
         ctx.save();
         ctx.globalAlpha = Math.max(0, c.alpha);
         ctx.translate(c.x, c.y);
@@ -945,7 +1130,6 @@
         if (!c.flipX) ctx.scale(-1, 1);
 
         if (c.state === 'AIRDROP') {
-          // 降落傘
           ctx.fillStyle = '#ff6b6b';
           ctx.beginPath();
           ctx.arc(0, -c.height - 20, 36, Math.PI, 0);
@@ -957,7 +1141,6 @@
         }
         ctx.restore();
 
-        // 繪製愛心
         for (const heart of c.hearts) {
           ctx.save();
           ctx.globalAlpha = Math.max(0, heart.alpha);
@@ -968,7 +1151,6 @@
           ctx.restore();
         }
 
-        // 對話泡泡
         if (c.speech && c.speechTimer > 0) {
           ctx.save();
           ctx.font = 'bold 14px sans-serif';
@@ -1009,7 +1191,6 @@
 
     // 按鈕事件
     document.getElementById('btnAdopt').addEventListener('click', () => adoptCat());
-    document.getElementById('btnAdoptSticky').addEventListener('click', () => adoptCat());
 
     document.getElementById('btnSpawn').addEventListener('click', () => {
       sound.init();
